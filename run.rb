@@ -1,0 +1,23 @@
+require_relative 'generate_cmc_records'
+
+###########################
+###   ENTER DATA HERE   ###
+###########################
+
+# For environment prefix refer to section 3 (API access) here: https://tools.hmcts.net/confluence/display/ROC/Environment+Links
+env_prefix = 'localhost:4400'
+
+claimant_session_id = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJxNzltMnB2NDhhNzdiN2I4ZnF1aXVpMmZ0biIsInN1YiI6IjI3IiwiaWF0IjoxNTM1OTYxNzg3LCJleHAiOjE1MzU5OTA1ODcsImRhdGEiOiJjaXRpemVuLGNsYWltYW50LGNpdGl6ZW4tbG9hMSxjbGFpbWFudC1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiMjciLCJmb3JlbmFtZSI6IkNsYWltIiwic3VybmFtZSI6IkFudCIsImRlZmF1bHQtc2VydmljZSI6ImNtYyIsImxvYSI6MSwiZGVmYXVsdC11cmwiOiJodHRwczovL3d3dy1jaXRpemVuLm1vbmV5Y2xhaW0ucmVmb3JtLmhtY3RzLm5ldDozMDAwL2NtYyIsImdyb3VwIjoiY2l0aXplbnMifQ.tPw7vFv1CU36HcLSObn_oqb9_aGrvBCnTZ1BeQyQD7I'
+defendant_session_id = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiYmFjdW1obHA3N2dqZm02bDhyMDdldXI1bCIsInN1YiI6IjMwIiwiaWF0IjoxNTM1OTY4MzY5LCJleHAiOjE1MzU5OTcxNjksImRhdGEiOiJjaXRpemVuLGNtYy1wcml2YXRlLWJldGEsbGV0dGVyLWhvbGRlcixsZXR0ZXItaG9sZGVyLGxldHRlci1ob2xkZXIsbGV0dGVyLWhvbGRlcixsZXR0ZXItaG9sZGVyLGxldHRlci1ob2xkZXIsbGV0dGVyLWhvbGRlcixsZXR0ZXItaG9sZGVyLGxldHRlci1ob2xkZXIsbGV0dGVyLWhvbGRlcixsZXR0ZXItaG9sZGVyLGRlZmVuZGFudCxjbGFpbWFudCxsZXR0ZXItMjksbGV0dGVyLTMxLGxldHRlci0zMixsZXR0ZXItMzMsbGV0dGVyLTM0LGxldHRlci0zNSxsZXR0ZXItMzYsbGV0dGVyLTM3LGxldHRlci0zOCxsZXR0ZXItNDAsbGV0dGVyLTM5LGxldHRlci1ob2xkZXIsbGV0dGVyLTQxLGxldHRlci1ob2xkZXIsbGV0dGVyLTQyLGxldHRlci1ob2xkZXIsbGV0dGVyLTQ0LGNpdGl6ZW4tbG9hMSxjbWMtcHJpdmF0ZS1iZXRhLWxvYTEsbGV0dGVyLWhvbGRlci1sb2ExLGxldHRlci1ob2xkZXItbG9hMSxsZXR0ZXItaG9sZGVyLWxvYTEsbGV0dGVyLWhvbGRlci1sb2ExLGxldHRlci1ob2xkZXItbG9hMSxsZXR0ZXItaG9sZGVyLWxvYTEsbGV0dGVyLWhvbGRlci1sb2ExLGxldHRlci1ob2xkZXItbG9hMSxsZXR0ZXItaG9sZGVyLWxvYTEsbGV0dGVyLWhvbGRlci1sb2ExLGxldHRlci1ob2xkZXItbG9hMSxkZWZlbmRhbnQtbG9hMSxjbGFpbWFudC1sb2ExLGxldHRlci0yOS1sb2ExLGxldHRlci0zMS1sb2ExLGxldHRlci0zMi1sb2ExLGxldHRlci0zMy1sb2ExLGxldHRlci0zNC1sb2ExLGxldHRlci0zNS1sb2ExLGxldHRlci0zNi1sb2ExLGxldHRlci0zNy1sb2ExLGxldHRlci0zOC1sb2ExLGxldHRlci00MC1sb2ExLGxldHRlci0zOS1sb2ExLGxldHRlci1ob2xkZXItbG9hMSxsZXR0ZXItNDEtbG9hMSxsZXR0ZXItaG9sZGVyLWxvYTEsbGV0dGVyLTQyLWxvYTEsbGV0dGVyLWhvbGRlci1sb2ExLGxldHRlci00NC1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiMzAiLCJmb3JlbmFtZSI6IkRlZmVuZCIsInN1cm5hbWUiOiJBbnQiLCJkZWZhdWx0LXNlcnZpY2UiOiJDTUMiLCJsb2EiOjEsImRlZmF1bHQtdXJsIjoiaHR0cHM6Ly93d3ctY2l0aXplbi5tb25leWNsYWltLnJlZm9ybS5obWN0cy5uZXQ6MzAwMC9jbWMiLCJncm91cCI6ImNtYy1wcml2YXRlLWJldGEifQ.IkVzWL1cPxSyl--CWCVKXkiWnQeZSjwcrfQS-2MMpG4'
+
+##################################
+#   EXECUTION RUNS FROM HERE   ###
+##################################
+
+args = {
+    env_prefix: env_prefix,
+    claimant_session_id: claimant_session_id,
+    defendant_session_id: defendant_session_id
+}
+
+GenerateCmcRecords.generate(args)
