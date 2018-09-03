@@ -2,9 +2,11 @@ require 'uri'
 require 'net/http'
 require 'jwt'
 require_relative 'json_modules/json_claim'
+require_relative 'json_modules/json_defendant_response'
 
 module GenerateCmcRecords
 	include JsonClaim
+  include JsonDefendantResponse
 
 	def self.generate(args)
 		env_prefix = args[:env_prefix]
@@ -25,7 +27,7 @@ module GenerateCmcRecords
     link_defendant_api_call(env_prefix, claim_no, defendant_id)
 
     external_id = JSON.parse(claim_api_call_response.body)['externalId']
-    defendant_response_api_call(external_id, defendant_id, defendant_session_id)
+    defendant_response_api_call(args[:defendant_response], env_prefix, external_id, defendant_id, defendant_session_id)
   end
 
   def self.claim_api_call(claim, env_prefix, claimant_id, claimant_session_id)
@@ -43,9 +45,9 @@ module GenerateCmcRecords
     response
   end
 
-  def self.defendant_response_api_call(defendant_response, external_id, defendant_id, defendant_session_id)
+  def self.defendant_response_api_call(defendant_response, env_prefix, external_id, defendant_id, defendant_session_id)
     json_defendant_response = JsonDefendantResponse.build_json_defendant_response(defendant_response)
-    defendant_response_url = "/responses/claim/#{external_id}/defendant/#{defendant_id}"
+    defendant_response_url = "http://#{env_prefix}/responses/claim/#{external_id}/defendant/#{defendant_id}"
     args = {session_id: defendant_session_id, body: json_defendant_response}
     response = api_call('defendant_response', defendant_response_url, args)
     raise('api call failure') unless response.class == Net::HTTPOK
@@ -81,7 +83,7 @@ module GenerateCmcRecords
 
 	def self.headers(type, args={})
 		case type
-    when 'claim'
+    when 'claim', 'defendant_response'
       {
         'Content-Type' => 'application/json',
         'Authorization' => "Bearer #{args[:session_id]}"
