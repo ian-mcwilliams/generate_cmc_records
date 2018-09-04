@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'jwt'
+require 'date'
 require_relative 'json_modules/json_claim'
 require_relative 'json_modules/json_defendant_response'
 
@@ -9,6 +10,13 @@ module GenerateCmcRecords
   include JsonDefendantResponse
 
 	def self.generate(args)
+    out_file = nil
+    if args[:create_result_file]
+      Dir.mkdir('results') unless File.exists?('results')
+      prefix = DateTime.now.strftime('%y%m%d_%H%M%S_')
+      out_file = File.new("results/#{prefix}_out.log", "w")
+    end
+
 		env_prefix = args[:env_prefix]
 
 		claimant_session_id = args[:claimant_session_id]
@@ -22,14 +30,26 @@ module GenerateCmcRecords
     # claimant_response_url = "/responses/#{external_id}/claimant/#{claimant_id}"
 
     claim_api_call_response = claim_api_call(args[:claim], env_prefix, claimant_id, claimant_session_id)
+    claim_api_call_message = "#{claim_api_call_response.body}\n\n"
+    puts claim_api_call_message
+    out_file.write(claim_api_call_message) if args[:create_result_file]
 
 		claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
     set_admissions_to_true(claim_no, args[:path_to_integration_tests])
+    admissions_message = "admissions set to TRUE for claim_no '#{claim_no}'\n\n"
+    puts admissions_message
+    out_file.write(admissions_message) if args[:create_result_file]
 
     link_defendant_api_call(env_prefix, claim_no, defendant_id)
+    link_defendant_message = "defendant_id set to '#{defendant_id}' for claim_no '#{claim_no}'\n\n"
+    puts link_defendant_message
+    out_file.write(link_defendant_message) if args[:create_result_file]
 
     external_id = JSON.parse(claim_api_call_response.body)['externalId']
-    defendant_response_api_call(args[:defendant_response], env_prefix, external_id, defendant_id, defendant_session_id)
+    defendant_api_call_response = defendant_response_api_call(args[:defendant_response], env_prefix, external_id, defendant_id, defendant_session_id)
+    defendant_api_call_message = "#{defendant_api_call_response.body}\n\n"
+    puts defendant_api_call_message
+    out_file.write(defendant_api_call_message) if args[:create_result_file]
   end
 
   def self.claim_api_call(claim, env_prefix, claimant_id, claimant_session_id)
