@@ -1,26 +1,161 @@
+require 'date'
 require_relative 'json_elements'
 
 module JsonDefendantResponse
   include JsonElements
 
   def self.build_json_defendant_response(defendant_response)
+    case defendant_response
+    when :full_admission_immediate_payment
+      json_full_admission_immediate_payment
+    when :reject_dispute_full_amount
+      json_reject_dispute_full_amount
+    when :part_admission_by_set_date
+      json_part_admission_by_set_date
+    end
+  end
+
+  def self.json_full_admission_immediate_payment
+    json_defendant_response = JsonElements.add_json_element({}.to_json, defendant)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_admission))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:immediately))
+    json_defendant_response
+  end
+
+  def self.json_reject_dispute_full_amount
+    json_defendant_response = JsonElements.add_json_element({}.to_json, defence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, evidence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence_type(:dispute))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_defence))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
+    json_defendant_response
+  end
+
+  def self.json_part_admission_by_set_date
+    json_defendant_response = JsonElements.add_json_element({}.to_json, amount)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, evidence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:part_admission))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:by_set_date))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, statement_of_means)
+    json_defendant_response
+  end
+
+  def self.amount
     {
-        "defendant": {
-            "name": "Mr Api Defendant",
-            "type": "individual",
-            "address": {
-                "city": "Testford",
-                "line1": "2 Test Rd",
-                "postcode": "XX1 1XX"
-            },
-            "dateOfBirth": "2000-01-01",
-            "mobilePhone": "01234567890"
+      "amount": 100
+    }.to_json
+  end
+
+  def self.defence
+    {
+      "defence": "test_ Why do you disagree with the claim?"
+    }.to_json
+  end
+
+  def self.defendant
+    {
+      "defendant": {
+        "name": "Mr Api Defendant",
+        "type": "individual",
+        "address": {
+          "city": "Testford",
+          "line1": "2 Test Rd",
+          "postcode": "XX1 1XX"
         },
-        "responseType": "FULL_ADMISSION",
-        "paymentIntention": {
-            "paymentDate": "2018-09-04",
-            "paymentOption": "IMMEDIATELY"
-        }
+        "dateOfBirth": "2000-01-01"
+      }
+    }.to_json
+  end
+
+  def self.evidence
+    {
+      "evidence": {}
+    }.to_json
+  end
+
+  def self.timeline
+    {
+      "timeline": {}
+    }.to_json
+  end
+
+  def self.defence_type(key)
+    value = {
+      dispute: 'DISPUTE'
+    }[key]
+
+    {
+      "defenceType": value
+    }.to_json
+  end
+
+  def self.response_type(key)
+    value = {
+      full_admission: 'FULL_ADMISSION',
+      part_admission: 'PART_ADMISSION',
+      full_defence: 'FULL_DEFENCE'
+    }[key]
+
+    {
+      "responseType": value
+    }.to_json
+  end
+
+  def self.free_mediation
+    {
+      "freeMediation": "no"
+    }.to_json
+  end
+
+  def self.payment_intention(key)
+    value = {
+      immediately: {date: (DateTime.now + 5).strftime('%Y-%m-%d'), option: 'IMMEDIATELY'},
+      by_set_date: {date: (DateTime.now + 30).strftime('%Y-%m-%d'), option: 'BY_SPECIFIED_DATE'},
+      instalments: {date: (DateTime.now + 30).strftime('%Y-%m-%d'), option: 'INSTALMENTS'}
+    }[key]
+
+    {
+      "paymentIntention": {
+        "paymentDate": value[:date],
+        "paymentOption": value[:option]
+      }
+    }.to_json
+  end
+
+  def self.statement_of_means
+    {
+      "statementOfMeans": {
+        "reason": "test_ Briefly explain why you can’t pay immediately",
+        "incomes": [{
+                      "type": "PENSION",
+                      "amount": 100,
+                      "frequency": "WEEK"
+                    }],
+        "expenses": [{
+                       "type": "RENT",
+                       "amount": 25,
+                       "frequency": "WEEK"
+                     }],
+        "residence": {
+          "type": "PRIVATE_RENTAL"
+        },
+        "employment": {
+          "unemployment": {
+            "retired": true
+          }
+        },
+        "bankAccounts": [{
+                           "type": "CURRENT_ACCOUNT",
+                           "joint": false,
+                           "balance": 100
+                         }]
+      }
     }.to_json
   end
 

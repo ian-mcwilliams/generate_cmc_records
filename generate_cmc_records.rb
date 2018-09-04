@@ -24,6 +24,8 @@ module GenerateCmcRecords
     claim_api_call_response = claim_api_call(args[:claim], env_prefix, claimant_id, claimant_session_id)
 
 		claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
+    set_admissions_to_true(claim_no, args[:path_to_integration_tests])
+
     link_defendant_api_call(env_prefix, claim_no, defendant_id)
 
     external_id = JSON.parse(claim_api_call_response.body)['externalId']
@@ -36,6 +38,11 @@ module GenerateCmcRecords
     response = api_call('claim', claim_url, {session_id: claimant_session_id, body: json_claim})
     raise('api call failure') unless response.class == Net::HTTPOK
     response
+  end
+
+  def self.set_admissions_to_true(claim_no, rel_dir)
+    bash_command = "docker-compose exec shared-database psql -U claimstore -c \"update claim set features = '[\\\"admissions\\\"]'::JSONB where reference_number = '#{claim_no}'\""
+    Dir.chdir(rel_dir) { system(bash_command) }
   end
 
   def self.link_defendant_api_call(env_prefix, claim_no, defendant_id)
@@ -83,7 +90,7 @@ module GenerateCmcRecords
 
 	def self.headers(type, args={})
 		case type
-    when 'claim', 'defendant_response'
+    when 'claim', 'defendant_response', 'claimant_response'
       {
         'Content-Type' => 'application/json',
         'Authorization' => "Bearer #{args[:session_id]}"
@@ -99,7 +106,8 @@ module GenerateCmcRecords
     {
         claim: :post,
         link_defendant: :put,
-        defendant_response: :post
+        defendant_response: :post,
+        claimant_response: :post
     }[type.to_sym]
   end
 
