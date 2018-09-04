@@ -9,9 +9,9 @@ module JsonDefendantResponse
     when :full_admission_immediate
       json_full_admission_immediate
     when :full_admission_by_set_date
-      json_full_admission_payment_by_set_date
+      json_full_admission_by_set_date
     when :full_admission_instalments
-      json_full_admission_payment_instalments
+      json_full_admission_instalments
     when :states_paid
       json_states_paid
     when :reject_dispute_full_amount
@@ -28,7 +28,7 @@ module JsonDefendantResponse
     json_defendant_response
   end
 
-  def self.json_full_admission_payment_by_set_date
+  def self.json_full_admission_by_set_date
     json_defendant_response = JsonElements.add_json_element({}.to_json, defendant)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_admission))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:by_set_date))
@@ -36,7 +36,7 @@ module JsonDefendantResponse
     json_defendant_response
   end
 
-  def self.json_full_admission_payment_instalments
+  def self.json_full_admission_instalments
     json_defendant_response = JsonElements.add_json_element({}.to_json, defendant)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_admission))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:by_set_date))
