@@ -12,7 +12,7 @@ module JsonDefendantResponse
       json_full_admission_by_set_date
     when :full_admission_instalments
       json_full_admission_instalments
-    when :states_paid
+    when :states_paid, :reject_paid_what_i_believe_i_owe_full
       json_states_paid
     when :part_admission_immediately
       json_part_admission_immediately
@@ -20,10 +20,8 @@ module JsonDefendantResponse
       json_part_admission_by_set_date
     when :part_admission_instalments
       json_part_admission_instalments
-    when :part_admission_states_paid
+    when :part_admission_states_paid, :reject_paid_what_i_believe_i_owe_part
       json_part_admission_states_paid
-    when :reject_paid_what_i_believe_i_owe_full
-      json_reject_paid_what_i_believe_i_owe_full
     when :reject_dispute_full_amount
       json_reject_dispute_full_amount
     end
@@ -108,16 +106,6 @@ module JsonDefendantResponse
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:part_admission))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_declaration)
-    json_defendant_response
-  end
-
-  def self.json_reject_paid_what_i_believe_i_owe_full
-    json_defendant_response = JsonElements.add_json_element({}.to_json, evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence_type(:states_paid))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_defence))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_declaration)
     json_defendant_response
   end
