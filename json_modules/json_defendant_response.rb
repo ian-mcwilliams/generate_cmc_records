@@ -14,10 +14,14 @@ module JsonDefendantResponse
       json_full_admission_instalments
     when :states_paid
       json_states_paid
-    when :reject_dispute_full_amount
-      json_reject_dispute_full_amount
+    when :part_admission_immediately
+      json_part_admission_immediately
     when :part_admission_by_set_date
       json_part_admission_by_set_date
+    when :part_admission_instalments
+      json_part_admission_instalments
+    when :reject_dispute_full_amount
+      json_reject_dispute_full_amount
     end
   end
 
@@ -54,14 +58,15 @@ module JsonDefendantResponse
     json_defendant_response
   end
 
-  def self.json_reject_dispute_full_amount
-    json_defendant_response = JsonElements.add_json_element({}.to_json, defence)
+  def self.json_part_admission_immediately
+    json_defendant_response = JsonElements.add_json_element({}.to_json, amount)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, evidence)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence_type(:dispute))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_defence))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_declaration)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:part_admission))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:immediately))
     json_defendant_response
   end
 
@@ -75,6 +80,30 @@ module JsonDefendantResponse
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:by_set_date))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, statement_of_means)
+    json_defendant_response
+  end
+
+  def self.json_part_admission_instalments
+    json_defendant_response = JsonElements.add_json_element({}.to_json, amount)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, evidence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:part_admission))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:instalments))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, statement_of_means)
+    json_defendant_response
+  end
+
+  def self.json_reject_dispute_full_amount
+    json_defendant_response = JsonElements.add_json_element({}.to_json, defence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, evidence)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, timeline)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defendant)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence_type(:dispute))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_defence))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_declaration)
     json_defendant_response
   end
 
