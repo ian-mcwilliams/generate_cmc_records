@@ -34,11 +34,13 @@ module GenerateCmcRecords
     puts claim_api_call_message
     out_file.write(claim_api_call_message) if args[:create_result_file]
 
-		claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
-    set_admissions_to_true(claim_no, args[:path_to_integration_tests])
-    admissions_message = "admissions set to TRUE for claim_no '#{claim_no}'\n\n"
-    puts admissions_message
-    out_file.write(admissions_message) if args[:create_result_file]
+    if args[:env_prefix]['localhost']
+      claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
+      set_admissions_to_true(claim_no, args[:path_to_integration_tests])
+      admissions_message = "admissions set to TRUE for claim_no '#{claim_no}'\n\n"
+      puts admissions_message
+      out_file.write(admissions_message) if args[:create_result_file]
+    end
 
     link_defendant_api_call(env_prefix, claim_no, defendant_id)
     link_defendant_message = "defendant_id set to '#{defendant_id}' for claim_no '#{claim_no}'\n\n"
@@ -88,7 +90,7 @@ module GenerateCmcRecords
 
 	def self.api_call(type, url, args={})
 		uri = URI(url)
-		req = send_request(request_type(type), uri, headers(type, args))
+		req = build_request(request_type(type), uri, headers(type, args))
 		req.body = args[:body] if args[:body]
 		response = nil
 		Net::HTTP.start(uri.hostname, uri.port) do |http|
@@ -99,7 +101,7 @@ module GenerateCmcRecords
     response
   end
 
-  def self.send_request(type, uri, headers)
+  def self.build_request(type, uri, headers)
     case type
     when :post
       Net::HTTP::Post.new(uri, headers)
