@@ -10,7 +10,6 @@ module RunGenerator
     config_file = File.open('config.json')
     config = JSON.parse(config_file.read)
 
-    out_file = nil
     if config['create_result_file']
       Dir.mkdir('results') unless File.exists?('results')
       prefix = DateTime.now.strftime('%y%m%d_%H%M%S_')
