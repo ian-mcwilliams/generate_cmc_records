@@ -31,8 +31,8 @@ module RunGenerator
       begin
         GenerateCmcRecords.generate(args)
       rescue => e
-        Logging.output_message(out_file, e.inspect)
-        Logging.output_message(out_file, e.backtrace)
+        Logging.output_message(e.inspect)
+        Logging.output_message(e.backtrace)
       end
     end
   end
