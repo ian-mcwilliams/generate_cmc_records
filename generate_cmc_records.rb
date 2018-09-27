@@ -60,9 +60,7 @@ module GenerateCmcRecords
   end
 
   def self.output_message(message)
-    puts message
-    file = out_file
-    file.write(message) if file
+    RunGenerator.output_message(out_file, message)
   end
 
   def self.claim_api_call(target_env, claim, env_prefix, claimant_id, claimant_session_id)
