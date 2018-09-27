@@ -10,7 +10,6 @@ module GenerateCmcRecords
 	def self.generate(args)
     iteration_id = args[:iteration_id]
 		target_env = args[:target_env]
-    env_prefix = env_url(target_env)
     run_action = args[:run_action]
 		claimant_session_id = args[:claimant_session_id]
     defendant_session_id = args[:defendant_session_id]
@@ -19,7 +18,7 @@ module GenerateCmcRecords
 
     Logging.output_message("###   ITERATION #{iteration_id}   ###\n\n") if iteration_id
 
-    claim_api_call_response = ApiCall.claim_api_call(target_env, args[:claim], env_prefix, claimant_id, claimant_session_id)
+    claim_api_call_response = ApiCall.claim_api_call(target_env, args[:claim], claimant_id, claimant_session_id)
     claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
 
     if target_env == :local
@@ -28,26 +27,18 @@ module GenerateCmcRecords
     end
 
     if run_action[:link_defendant]
-      ApiCall.link_defendant_api_call(target_env, env_prefix, claim_no, defendant_id)
+      ApiCall.link_defendant_api_call(target_env, claim_no, defendant_id)
       Logging.output_message("defendant_id set to '#{defendant_id}' for claim_no '#{claim_no}'\n\n")
 
       if run_action[:defendant_response]
         external_id = JSON.parse(claim_api_call_response.body)['externalId']
-        ApiCall.defendant_response_api_call(target_env, args[:defendant_response], env_prefix, external_id, defendant_id, defendant_session_id)
+        ApiCall.defendant_response_api_call(target_env, args[:defendant_response], external_id, defendant_id, defendant_session_id)
 
         if run_action[:claimant_response]
-          ApiCall.claimant_response_api_call(target_env, run_action[:claimant_response], env_prefix, external_id, claimant_id, claimant_session_id)
+          ApiCall.claimant_response_api_call(target_env, run_action[:claimant_response], external_id, claimant_id, claimant_session_id)
         end
       end
     end
-  end
-
-  def self.env_url(target_env)
-    {
-      'local' => 'localhost:4400',
-      'aat' => 'cmc-claim-store-aat.service.core-compute-aat.internal',
-      'demo' => 'cmc-claim-store-demo.service.core-compute-demo.internal'
-    }[target_env]
   end
 
   def self.set_admissions_to_true(claim_no, rel_dir)

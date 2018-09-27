@@ -3,34 +3,51 @@ require 'net/http'
 
 module ApiCall
 
-  def self.claim_api_call(target_env, claim, env_prefix, claimant_id, claimant_session_id)
+  def self.env_url(target_env)
+    {
+      'local' => 'localhost:4400',
+      'aat' => 'cmc-claim-store-aat.service.core-compute-aat.internal',
+      'demo' => 'cmc-claim-store-demo.service.core-compute-demo.internal'
+    }[target_env]
+  end
+
+  def self.response_url(target_env, journey, args)
+    {
+      claim: "#{env_url(target_env)}/claims/#{args[:claimant_id]}",
+      link_defendant: "#{env_url(target_env)}/testing-support/claims/#{args[:claim_no]}/defendant/#{args[:defendant_id]}",
+      defendant_response: "#{env_url(target_env)}/responses/claim/#{args[:external_id]}/defendant/#{args[:defendant_id]}",
+      claimant_response: "http://#{env_url(target_env)}/responses/#{args[:external_id]}/claimant/#{args[:claimant_id]}"
+    }[journey]
+  end
+
+  def self.claim_api_call(target_env, claim, claimant_id, claimant_session_id)
     json_claim = JsonResponseBody.json_response_body(:claim, claim)
-    claim_url = "#{env_prefix}/claims/#{claimant_id}"
-    response = api_call(target_env, 'claim', claim_url, {session_id: claimant_session_id, body: json_claim, env_prefix: env_prefix})
+    claim_url = response_url(target_env, :claim, {claimant_id: claimant_id})
+    response = api_call(target_env, 'claim', claim_url, {session_id: claimant_session_id, body: json_claim})
     raise('api call failure') unless response.class == Net::HTTPOK
     response
   end
 
-  def self.link_defendant_api_call(target_env, env_prefix, claim_no, defendant_id)
-    link_defendant_url = "#{env_prefix}/testing-support/claims/#{claim_no}/defendant/#{defendant_id}"
-    response = api_call(target_env, 'link_defendant', link_defendant_url, {env_prefix: env_prefix})
+  def self.link_defendant_api_call(target_env, claim_no, defendant_id)
+    link_defendant_url = response_url(target_env, :link_defendant, {claim_no: claim_no, defendant_id: defendant_id})
+    response = api_call(target_env, 'link_defendant', link_defendant_url)
     raise('api call failure') unless response.class == Net::HTTPOK
     response
   end
 
-  def self.defendant_response_api_call(target_env, defendant_response, env_prefix, external_id, defendant_id, defendant_session_id)
+  def self.defendant_response_api_call(target_env, defendant_response, external_id, defendant_id, defendant_session_id)
     json_defendant_response = JsonResponseBody.json_response_body(:defendant_response, defendant_response)
-    defendant_response_url = "#{env_prefix}/responses/claim/#{external_id}/defendant/#{defendant_id}"
-    args = {session_id: defendant_session_id, body: json_defendant_response, env_prefix: env_prefix}
+    defendant_response_url = response_url(target_env, :defendant_response, {external_id: external_id, defendant_id: defendant_id})
+    args = {session_id: defendant_session_id, body: json_defendant_response}
     response = api_call(target_env, 'defendant_response', defendant_response_url, args)
     raise('api call failure') unless response.class == Net::HTTPOK
     response
   end
 
-  def self.claimant_response_api_call(target_env, claimant_response, env_prefix, external_id, claimant_id, claimant_session_id)
+  def self.claimant_response_api_call(target_env, claimant_response, external_id, claimant_id, claimant_session_id)
     json_claimant_response = JsonResponseBody.json_response_body(:claimant_response, claimant_response)
-    claimant_response_url = "http://#{env_prefix}/responses/#{external_id}/claimant/#{claimant_id}"
-    args = {session_id: claimant_session_id, body: json_claimant_response, env_prefix: env_prefix}
+    claimant_response_url = response_url(target_env, :claimant_response, {external_id: external_id, claimant_id: claimant_id})
+    args = {session_id: claimant_session_id, body: json_claimant_response}
     response = api_call(target_env, 'claimant_response', claimant_response_url, args)
     raise('api call failure') unless response.class == Net::HTTPOK
     response
@@ -43,7 +60,7 @@ module ApiCall
     response = nil
     case target_env.to_sym
     when :aat
-      Net::HTTP.new(args[:env_prefix], nil, 'proxyout.reform.hmcts.net', 8080).start do |http|
+      Net::HTTP.new(env_url(target_env), nil, 'proxyout.reform.hmcts.net', 8080).start do |http|
         response = api_request(http, req, type)
       end
     when :local, :demo
