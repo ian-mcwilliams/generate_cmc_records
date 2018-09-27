@@ -5,17 +5,19 @@ module JsonClaim
 	include JsonElements
 
 	def self.build_json_claim(claim)
-		json_claim = JsonElements.add_json_element({}.to_json, JsonClaimElements.amount)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.payment)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.timeline)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.interest)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.claimants)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.defendants)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.reason)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.timeline)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.evidence)
-		json_claim = JsonElements.add_json_element(json_claim, JsonClaimElements.fee_amount_in_pennies)
-		json_claim
+		json_elements = [
+			JsonClaimElements.amount,
+			JsonClaimElements.payment,
+			JsonClaimElements.timeline,
+			JsonClaimElements.interest,
+			JsonClaimElements.claimants,
+			JsonClaimElements.defendants,
+			JsonClaimElements.reason,
+			JsonClaimElements.timeline,
+			JsonClaimElements.evidence,
+			JsonClaimElements.fee_amount_in_pennies
+		]
+		JsonElements.collate_json_elements(json_elements)
 	end
 
 end
