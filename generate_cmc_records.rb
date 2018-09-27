@@ -17,9 +17,9 @@ module GenerateCmcRecords
 
   def self.env_url(target_env)
     {
-      local: 'localhost:4400',
-      aat: 'cmc-claim-store-aat.service.core-compute-aat.internal',
-      demo: 'cmc-claim-store-demo.service.core-compute-demo.internal'
+      'local' => 'localhost:4400',
+      'aat' => 'cmc-claim-store-aat.service.core-compute-aat.internal',
+      'demo' => 'cmc-claim-store-demo.service.core-compute-demo.internal'
     }[target_env]
   end
 
@@ -113,7 +113,7 @@ module GenerateCmcRecords
     req = build_request(request_type(type), uri, headers(type, args))
     req.body = args[:body] if args[:body]
     response = nil
-    case target_env
+    case target_env.to_sym
     when :aat
       Net::HTTP.new(args[:env_prefix], nil, 'proxyout.reform.hmcts.net', 8080).start do |http|
         response = api_request(http, req, type)
