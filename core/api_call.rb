@@ -20,59 +20,41 @@ module ApiCall
     }[journey]
   end
 
-  def self.claim_api_call(target_env, claim, claimant_id, claimant_session_id)
-    json_claim = JsonResponseBody.json_response_body(:claim, claim)
-    claim_url = response_url(target_env, :claim, {claimant_id: claimant_id})
-    response = api_call(target_env, 'claim', claim_url, {session_id: claimant_session_id, body: json_claim})
-    raise('api call failure') unless response.class == Net::HTTPOK
-    response
+  def self.journey_api_call(target_env, journey, args)
+    json_blob = nil
+    if %i[claim defendant_response claimant_response].include?(journey)
+      json_blob = JsonResponseBody.json_response_body(journey, args[:journey_data])
+    end
+    api_url = response_url(target_env, journey, args)
+    api_call(target_env, journey, api_url, json_blob, args)
   end
 
-  def self.link_defendant_api_call(target_env, claim_no, defendant_id)
-    link_defendant_url = response_url(target_env, :link_defendant, {claim_no: claim_no, defendant_id: defendant_id})
-    response = api_call(target_env, 'link_defendant', link_defendant_url)
-    raise('api call failure') unless response.class == Net::HTTPOK
-    response
-  end
-
-  def self.defendant_response_api_call(target_env, defendant_response, external_id, defendant_id, defendant_session_id)
-    json_defendant_response = JsonResponseBody.json_response_body(:defendant_response, defendant_response)
-    defendant_response_url = response_url(target_env, :defendant_response, {external_id: external_id, defendant_id: defendant_id})
-    args = {session_id: defendant_session_id, body: json_defendant_response}
-    response = api_call(target_env, 'defendant_response', defendant_response_url, args)
-    raise('api call failure') unless response.class == Net::HTTPOK
-    response
-  end
-
-  def self.claimant_response_api_call(target_env, claimant_response, external_id, claimant_id, claimant_session_id)
-    json_claimant_response = JsonResponseBody.json_response_body(:claimant_response, claimant_response)
-    claimant_response_url = response_url(target_env, :claimant_response, {external_id: external_id, claimant_id: claimant_id})
-    args = {session_id: claimant_session_id, body: json_claimant_response}
-    response = api_call(target_env, 'claimant_response', claimant_response_url, args)
-    raise('api call failure') unless response.class == Net::HTTPOK
-    response
-  end
-
-  def self.api_call(target_env, type, url, args={})
+  def self.api_call(target_env, journey, url, body, args={})
     uri = URI("http://#{url}")
-    req = build_request(request_type(type), uri, headers(type, args))
-    req.body = args[:body] if args[:body]
+    req = build_request(journey, uri, args[:session_id])
+    req.body = body if body
+    response = env_api_call(target_env, journey, uri, req)
+    raise('api call failure') unless response.class == Net::HTTPOK
+    response
+  end
+
+  def self.env_api_call(target_env, journey, uri, req)
     response = nil
     case target_env.to_sym
     when :aat
       Net::HTTP.new(env_url(target_env), nil, 'proxyout.reform.hmcts.net', 8080).start do |http|
-        response = api_request(http, req, type)
+        response = send_request(http, req, journey)
       end
     when :local, :demo
       Net::HTTP.start(uri.hostname, uri.port) do |http|
-        response = api_request(http, req, type)
+        response = send_request(http, req, journey)
       end
     end
     response
   end
 
-  def self.api_request(http, req, type)
-    Logging.output_message(%(sending "#{type}" http request as: #{req.uri}))
+  def self.send_request(http, req, journey)
+    Logging.output_message(%(sending "#{journey}" http request as: #{req.uri}))
     Logging.output_message("request body: #{req.body}")
     response = http.request(req)
     Logging.output_message("response type: #{response.class}")
@@ -80,36 +62,26 @@ module ApiCall
     response
   end
 
-  def self.build_request(type, uri, headers)
-    case type
-    when :post
-      Net::HTTP::Post.new(uri, headers)
-    when :put
-      Net::HTTP::Put.new(uri, headers)
-    end
+  def self.build_request(journey, uri, session_id=nil)
+    http_module = { post: Net::HTTP::Post, put: Net::HTTP::Put }[request_type(journey)]
+    http_module.new(uri, headers(journey, session_id))
   end
 
-  def self.headers(type, args={})
-    case type
-    when 'claim', 'defendant_response', 'claimant_response'
-      {
-        'Content-Type' => 'application/json',
-        'Authorization' => "Bearer #{args[:session_id]}"
-      }
-    when 'link_defendant'
-      {
-        'Content-Type' => 'application/json'
-      }
+  def self.headers(journey, session_id=nil)
+    headers_hash = { 'Content-Type' => 'application/json' }
+    if %i[claim defendant_response claimant_response].include?(journey)
+      headers_hash['Authorization'] = "Bearer #{session_id}"
     end
+    headers_hash
   end
 
-  def self.request_type(type)
+  def self.request_type(journey)
     {
       claim: :post,
       link_defendant: :put,
       defendant_response: :post,
       claimant_response: :post
-    }[type.to_sym]
+    }[journey.to_sym]
   end
 
 end

@@ -18,7 +18,8 @@ module GenerateCmcRecords
 
     Logging.output_message("###   ITERATION #{iteration_id}   ###\n\n") if iteration_id
 
-    claim_api_call_response = ApiCall.claim_api_call(target_env, args[:claim], claimant_id, claimant_session_id)
+    claim_args = {claimant_id: claimant_id, session_id: claimant_session_id}
+    claim_api_call_response = ApiCall.journey_api_call(target_env, :claim, claim_args)
     claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
 
     if target_env == :local
@@ -27,15 +28,28 @@ module GenerateCmcRecords
     end
 
     if run_action[:link_defendant]
-      ApiCall.link_defendant_api_call(target_env, claim_no, defendant_id)
+      link_defendant_args = {claim_no: claim_no, defendant_id: defendant_id}
+      ApiCall.journey_api_call(target_env, :link_defendant, link_defendant_args)
       Logging.output_message("defendant_id set to '#{defendant_id}' for claim_no '#{claim_no}'\n\n")
 
       if run_action[:defendant_response]
         external_id = JSON.parse(claim_api_call_response.body)['externalId']
-        ApiCall.defendant_response_api_call(target_env, args[:defendant_response], external_id, defendant_id, defendant_session_id)
+        defendant_response_args = {
+          journey_data: args[:defendant_response],
+          external_id: external_id,
+          defendant_id: defendant_id,
+          session_id: defendant_session_id
+        }
+        ApiCall.journey_api_call(target_env, :defendant_response, defendant_response_args)
 
         if run_action[:claimant_response]
-          ApiCall.claimant_response_api_call(target_env, run_action[:claimant_response], external_id, claimant_id, claimant_session_id)
+          claimant_response_args = {
+            journey_data: run_action[:claimant_response],
+            external_id: external_id,
+            claimant_id: claimant_id,
+            session_id: claimant_session_id
+          }
+          ApiCall.journey_api_call(target_env, :claimant_response, claimant_response_args)
         end
       end
     end
