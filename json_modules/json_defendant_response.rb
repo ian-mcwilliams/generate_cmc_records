@@ -12,16 +12,16 @@ module JsonDefendantResponse
       json_full_admission_by_set_date
     when :full_admission_instalments
       json_full_admission_instalments
-    when :states_paid, :reject_paid_what_i_believe_i_owe_full
-      json_states_paid
+    when :reject_paid_what_i_believe_i_owe_full
+      json_reject_paid_what_i_believe_i_owe_full
     when :part_admission_immediately
       json_part_admission_immediately
     when :part_admission_by_set_date
       json_part_admission_by_set_date
     when :part_admission_instalments
       json_part_admission_instalments
-    when :part_admission_states_paid, :reject_paid_what_i_believe_i_owe_part
-      json_part_admission_states_paid
+    when :reject_paid_what_i_believe_i_owe_part
+      json_reject_paid_what_i_believe_i_owe_part
     when :reject_dispute_full_amount
       json_reject_dispute_full_amount
     end
@@ -53,7 +53,7 @@ module JsonDefendantResponse
     ]
   end
 
-  def self.json_states_paid
+  def self.json_reject_paid_what_i_believe_i_owe_full
     [
       JsonDefendantResponseElements.evidence,
       JsonDefendantResponseElements.timeline,
@@ -105,7 +105,7 @@ module JsonDefendantResponse
     ]
   end
 
-  def self.json_part_admission_states_paid
+  def self.json_reject_paid_what_i_believe_i_owe_part
     [
       JsonDefendantResponseElements.amount,
       JsonDefendantResponseElements.defence,
