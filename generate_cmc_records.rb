@@ -1,12 +1,12 @@
 require 'uri'
 require 'net/http'
 require 'jwt'
-require_relative 'json_modules/json_claim'
+require_relative 'json_modules/json_response_body'
 require_relative 'json_modules/json_defendant_response'
 require_relative 'json_modules/json_claimant_response'
 
 module GenerateCmcRecords
-	include JsonClaim
+	include JsonResponseBody
   include JsonDefendantResponse
   include JsonClaimantResponse
 
@@ -64,7 +64,7 @@ module GenerateCmcRecords
   end
 
   def self.claim_api_call(target_env, claim, env_prefix, claimant_id, claimant_session_id)
-    json_claim = JsonClaim.build_json_claim(claim)
+    json_claim = JsonResponseBody.json_response_body(:claim, claim)
     claim_url = "#{env_prefix}/claims/#{claimant_id}"
     response = api_call(target_env, 'claim', claim_url, {session_id: claimant_session_id, body: json_claim, env_prefix: env_prefix})
     raise('api call failure') unless response.class == Net::HTTPOK
