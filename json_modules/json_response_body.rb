@@ -6,6 +6,8 @@ module JsonResponseBody
     case journey
     when :claim
       json_elements = JsonClaim.build_json_claim(journey_data)
+    when :defendant_response
+      json_elements = JsonDefendantResponse.build_json_defendant_response(journey_data)
     end
     collate_json_elements(json_elements)
   end

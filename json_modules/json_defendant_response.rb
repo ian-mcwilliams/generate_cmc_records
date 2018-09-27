@@ -30,98 +30,107 @@ module JsonDefendantResponse
   end
 
   def self.json_full_admission_immediate
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:full_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:immediately))
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:full_admission),
+      JsonDefendantResponseElements.payment_intention(:immediately)
+    ]
   end
 
   def self.json_full_admission_by_set_date
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:full_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:by_set_date))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.statement_of_means)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:full_admission),
+      JsonDefendantResponseElements.payment_intention(:by_set_date),
+      JsonDefendantResponseElements.statement_of_means
+    ]
   end
 
   def self.json_full_admission_instalments
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:full_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:instalments))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.statement_of_means)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:full_admission),
+      JsonDefendantResponseElements.payment_intention(:instalments),
+      JsonDefendantResponseElements.statement_of_means
+    ]
   end
 
   def self.json_states_paid
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence_type(:states_paid))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:full_defence))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_declaration)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.defence_type(:states_paid),
+      JsonDefendantResponseElements.response_type(:full_defence),
+      JsonDefendantResponseElements.payment_declaration
+    ]
   end
 
   def self.json_part_admission_immediately
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.amount)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:part_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.free_mediation)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:immediately))
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.amount,
+      JsonDefendantResponseElements.defence,
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:part_admission),
+      JsonDefendantResponseElements.free_mediation,
+      JsonDefendantResponseElements.payment_intention(:immediately)
+    ]
   end
 
   def self.json_part_admission_by_set_date
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.amount)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:part_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.free_mediation)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:by_set_date))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.statement_of_means)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.amount,
+      JsonDefendantResponseElements.defence,
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:part_admission),
+      JsonDefendantResponseElements.free_mediation,
+      JsonDefendantResponseElements.payment_intention(:by_set_date),
+      JsonDefendantResponseElements.statement_of_means
+    ]
   end
 
   def self.json_part_admission_instalments
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.amount)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:part_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.free_mediation)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_intention(:instalments))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.statement_of_means)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.amount,
+      JsonDefendantResponseElements.defence,
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:part_admission),
+      JsonDefendantResponseElements.free_mediation,
+      JsonDefendantResponseElements.payment_intention(:instalments),
+      JsonDefendantResponseElements.statement_of_means
+    ]
   end
 
   def self.json_part_admission_states_paid
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.amount)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:part_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.free_mediation)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_declaration)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.amount,
+      JsonDefendantResponseElements.defence,
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.response_type(:part_admission),
+      JsonDefendantResponseElements.free_mediation,
+      JsonDefendantResponseElements.payment_declaration
+    ]
   end
 
   def self.json_reject_dispute_full_amount
-    json_defendant_response = JsonElements.add_json_element({}.to_json, JsonDefendantResponseElements.defence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.evidence)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.timeline)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defendant)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.defence_type(:dispute))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.response_type(:full_defence))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.payment_declaration)
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, JsonDefendantResponseElements.free_mediation)
-    json_defendant_response
+    [
+      JsonDefendantResponseElements.defence,
+      JsonDefendantResponseElements.evidence,
+      JsonDefendantResponseElements.timeline,
+      JsonDefendantResponseElements.defendant,
+      JsonDefendantResponseElements.defence_type(:dispute),
+      JsonDefendantResponseElements.response_type(:full_defence),
+      JsonDefendantResponseElements.payment_declaration,
+      JsonDefendantResponseElements.free_mediation
+    ]
   end
 
 end
