@@ -6,7 +6,7 @@ module JsonDefendantResponse
   include JsonElements
   include JsonDefendantResponseElements
 
-  def self.build_json_defendant_response(defendant_response)
+  def self.build_json_blob(defendant_response)
     case defendant_response
     when :full_admission_immediate
       json_full_admission_immediate
