@@ -1,6 +1,6 @@
 require 'date'
 require_relative 'generate_cmc_records'
-require_relative 'run_spec'
+require_relative '../run_spec'
 require_relative 'logging'
 
 module RunGenerator

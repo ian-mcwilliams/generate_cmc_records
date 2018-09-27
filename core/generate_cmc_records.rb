@@ -1,6 +1,6 @@
 require 'jwt'
 require_relative 'api_call'
-require_relative 'json_modules/es/json_response_body'
+require_relative '../json_modules/json_response_body'
 require_relative 'logging'
 
 module GenerateCmcRecords
