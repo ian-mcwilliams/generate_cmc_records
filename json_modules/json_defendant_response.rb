@@ -45,7 +45,7 @@ module JsonDefendantResponse
   def self.json_full_admission_instalments
     json_defendant_response = JsonElements.add_json_element({}.to_json, defendant)
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_admission))
-    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:by_set_date))
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_intention(:instalments))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, statement_of_means)
     json_defendant_response
   end
@@ -118,6 +118,7 @@ module JsonDefendantResponse
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, defence_type(:dispute))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, response_type(:full_defence))
     json_defendant_response = JsonElements.add_json_element(json_defendant_response, payment_declaration)
+    json_defendant_response = JsonElements.add_json_element(json_defendant_response, free_mediation)
     json_defendant_response
   end
 
