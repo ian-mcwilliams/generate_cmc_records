@@ -4,35 +4,35 @@
 
 Chain api links to automatically generate journeys up to given state
 
-##Scope
+## Scope
 
 Local, demo and aat. Anything from individual claim to sets of claims linked to defendants with responses and claimant responses as specified for the run
 
-## How to run
+# How to run
 
-### Set value in config.json
+## Set values in config.json
 
-#### target_env
+### target_env
 "local", "aat" or "demo"
 
-#### path_to_integration_tests 
+### path_to_integration_tests 
 - if local, set relative path to cmc-integration-tests to ensure feature admissions set for this claim (it is a workaround because my local setup wasn't letting me switch the toggle)
 - if demo or aat this setting will be ignored
 
-#### claimant_session_id
+### claimant_session_id
 from logged in browser session
 
-#### defendant_session_id
+### defendant_session_id
 from logged in browser session
 
-#### create_result_file
+### create_result_file
 boolean - if true will save the console output to timestamped file in /results
 
-### Add run specification in run_spec.rb
+## Add run specification in run_spec.rb
 
 The ruby hash (for a single run) or array (for a set of single runs) must be returned from the run_spec method in the RunSpec module, beyond this it can be coded in any way preferred
 
-#### Individual run hash
+### Run hash format
 
 For an unlinked claim alone, just specify false for link_defendant:
 
