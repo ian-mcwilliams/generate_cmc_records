@@ -1,22 +1,46 @@
+require 'date'
 require 'jwt'
 require_relative 'api_call'
-require_relative '../json_modules/json_response_body'
 require_relative 'logging'
+require_relative '../json_modules/json_response_body'
+require_relative '../run_spec'
 
 module GenerateCmcRecords
 	include JsonResponseBody
   include Logging
 
-	def self.generate(args)
-    iteration_id = args[:iteration_id]
-		target_env = args[:target_env]
-    run_action = args[:run_action]
+  def self.generate_records
+    config_file = File.open('config.json')
+    config = JSON.parse(config_file.read)
+
+    create_results_file if config['create_result_file']
+
+    args = {
+      claimant_session_id: config['claimant_session_id'],
+      defendant_session_id: config['defendant_session_id'],
+      path_to_integration_tests: config['path_to_integration_tests']
+    }
+
+    RunSpec.run_spec.each_with_index do |run_action, i|
+      Logging.output_message("###   ITERATION #{i + 1}   ###\n\n")
+      generate_record(config['target_env'], run_action, args)
+    end
+  end
+
+  def self.generate_record(target_env, run_action, args)
+    begin
+      generation_actions(target_env, run_action, args)
+    rescue => e
+      Logging.output_message(e.inspect)
+      Logging.output_message(e.backtrace)
+    end
+  end
+
+	def self.generation_actions(target_env, run_action, args)
 		claimant_session_id = args[:claimant_session_id]
     defendant_session_id = args[:defendant_session_id]
 		claimant_id = session_id_to_user_id(claimant_session_id)
 		defendant_id = session_id_to_user_id(defendant_session_id)
-
-    Logging.output_message("###   ITERATION #{iteration_id}   ###\n\n") if iteration_id
 
     claim_args = {claimant_id: claimant_id, session_id: claimant_session_id}
     claim_api_call_response = ApiCall.journey_api_call(target_env, :claim, claim_args)
@@ -35,7 +59,7 @@ module GenerateCmcRecords
       if run_action[:defendant_response]
         external_id = JSON.parse(claim_api_call_response.body)['externalId']
         defendant_response_args = {
-          journey_data: args[:defendant_response],
+          journey_data: run_action[:defendant_response],
           external_id: external_id,
           defendant_id: defendant_id,
           session_id: defendant_session_id
@@ -64,5 +88,11 @@ module GenerateCmcRecords
 		decoded_token = JWT.decode session_id, nil, false
 		decoded_token[0]['id']
 	end
+
+  def create_results_file
+    Dir.mkdir('results') unless File.exists?('results')
+    prefix = DateTime.now.strftime('%y%m%d_%H%M%S_')
+    Logging.out_file(File.new("results/#{prefix}_out.log", "w"))
+  end
 
 end

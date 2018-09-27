@@ -1,5 +1,5 @@
-require_relative 'core/run_generator'
+require_relative 'core/generate_cmc_records'
 
-include RunGenerator
+include GenerateCmcRecords
 
-RunGenerator.run_generator
+GenerateCmcRecords.generate_records
