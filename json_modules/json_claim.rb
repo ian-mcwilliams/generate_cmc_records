@@ -1,3 +1,4 @@
+require_relative 'json_claim_elements'
 require_relative 'json_common_elements'
 
 module JsonClaim

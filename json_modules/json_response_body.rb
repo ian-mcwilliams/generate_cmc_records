@@ -1,6 +1,11 @@
 require_relative 'json_claim'
+require_relative 'json_defendant_response'
+require_relative 'json_claimant_response'
 
 module JsonResponseBody
+  include JsonClaim
+  include JsonDefendantResponse
+  include JsonClaimantResponse
 
   def self.json_response_body(journey, journey_data)
     json_elements = response_module(journey).build_json_blob(journey_data)
