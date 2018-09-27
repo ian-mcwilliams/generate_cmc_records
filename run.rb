@@ -38,5 +38,3 @@ module RunGenerator
   end
 
 end
-
-RunGenerator.run_generator
