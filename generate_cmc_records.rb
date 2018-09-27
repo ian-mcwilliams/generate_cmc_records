@@ -93,7 +93,7 @@ module GenerateCmcRecords
   end
 
   def self.claimant_response_api_call(target_env, claimant_response, env_prefix, external_id, claimant_id, claimant_session_id)
-    json_claimant_response = JsonClaimantResponse.build_json_claimant_response(claimant_response)
+    json_claimant_response = JsonResponseBody.json_response_body(:claimant_response, claimant_response)
     claimant_response_url = "http://#{env_prefix}/responses/#{external_id}/claimant/#{claimant_id}"
     args = {session_id: claimant_session_id, body: json_claimant_response, env_prefix: env_prefix}
     response = api_call(target_env, 'claimant_response', claimant_response_url, args)

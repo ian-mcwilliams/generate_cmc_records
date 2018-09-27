@@ -2,7 +2,7 @@ module JsonClaimantResponse
   def self.build_json_claimant_response(claimant_response)
     case claimant_response
     when :accept_repayment_with_ccj
-      json_accept_repayment_with_ccj
+      [json_accept_repayment_with_ccj]
     end
   end
 
