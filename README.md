@@ -30,9 +30,9 @@ boolean - if true will save the console output to timestamped file in /results
 
 ## Add run specification in run_spec.rb
 
-The ruby hash (for a single run) or array (for a set of single runs) must be returned from the run_spec method in the RunSpec module, beyond this it can be coded in any way preferred
+The ruby hashes (each for a single run) must sit within an array (for a set of single runs) which must be returned from the run_spec method in the RunSpec module, beyond this it can be coded in any way preferred
 
-### Run hash format
+### Individual run hash format
 
 For an unlinked claim alone, just specify false for link_defendant:
 
