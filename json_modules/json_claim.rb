@@ -1,8 +1,6 @@
-require_relative 'json_elements'
-require_relative 'json_claim_elements'
+require_relative 'json_common_elements'
 
 module JsonClaim
-	include JsonElements
 
 	def self.build_json_blob(claim)
 		[

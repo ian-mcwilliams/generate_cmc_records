@@ -1,9 +1,7 @@
 require 'date'
-require_relative 'json_elements'
 require_relative 'json_defendant_response_elements'
 
 module JsonDefendantResponse
-  include JsonElements
   include JsonDefendantResponseElements
 
   def self.build_json_blob(defendant_response)
