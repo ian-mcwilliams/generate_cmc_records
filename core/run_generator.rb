@@ -14,7 +14,7 @@ module RunGenerator
     if config['create_result_file']
       Dir.mkdir('results') unless File.exists?('results')
       prefix = DateTime.now.strftime('%y%m%d_%H%M%S_')
-      Logging.out_file = File.new("results/#{prefix}_out.log", "w")
+      Logging.out_file(File.new("results/#{prefix}_out.log", "w"))
     end
 
     RunSpec.run_spec.each_with_index do |run_action, i|
