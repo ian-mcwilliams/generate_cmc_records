@@ -30,7 +30,7 @@ module ApiCall
   end
 
   def self.api_call(target_env, journey, url, body, args={})
-    uri = URI("http://#{url}")
+    uri = journey == :claimant_response ? URI(url) : URI("http://#{url}")
     req = build_request(journey, uri, args[:session_id])
     req.body = body if body
     response = env_api_call(target_env, journey, uri, req)
