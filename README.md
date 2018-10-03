@@ -1,5 +1,17 @@
 # Generate CMC Records
 
+## Run script
+
+Add valid session_id for claimant and defendant in config.json
+
+From project root:
+
+```bash
+ruby 'run.rb'
+```
+
+See config.json and run_spec.rb
+
 ## Purpose
 
 Chain api links to automatically generate journeys up to given state
@@ -8,7 +20,7 @@ Chain api links to automatically generate journeys up to given state
 
 Local, demo and aat. Anything from individual claim to sets of claims linked to defendants with responses and claimant responses as specified for the run
 
-# How to run
+# Configure
 
 ## Set values in config.json
 
