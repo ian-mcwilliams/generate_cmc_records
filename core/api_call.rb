@@ -30,17 +30,11 @@ module ApiCall
   end
 
   def self.api_call(target_env, journey, url, body, args={})
-    if target_env == 'local' && journey == :claimant_response
-      curl_string = build_curl(url, args[:session_id], body)
-      Logging.output_message("curl_string: #{curl_string}")
-      response = %x(#{curl_string})
-    else
-      uri = journey == :claimant_response ? URI(url) : URI("http://#{url}")
-      req = build_request(journey, uri, args[:session_id])
-      req.body = body if body
-      response = env_api_call(target_env, journey, uri, req)
-      raise('api call failure') unless response.class == Net::HTTPOK
-    end
+    uri = journey == :claimant_response ? URI(url) : URI("http://#{url}")
+    req = build_request(journey, uri, args[:session_id])
+    req.body = body if body
+    response = env_api_call(target_env, journey, uri, req)
+    raise('api call failure') unless response.class == Net::HTTPOK
     response
   end
 
@@ -88,13 +82,6 @@ module ApiCall
       defendant_response: :post,
       claimant_response: :post
     }[journey.to_sym]
-  end
-
-  def self.build_curl(url, session_id, body)
-    headers_string = '-H "accept: application/json;charset=UTF-8"'
-    headers_string += %( -H "Authorization: Bearer #{session_id}")
-    headers_string += ' -H "Content-Type: application/json;charset=UTF-8"'
-    %(curl -X POST "#{url}" #{headers_string} -d "#{body.gsub('"', '\"')}")
   end
 
 end
