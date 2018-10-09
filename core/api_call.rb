@@ -34,7 +34,11 @@ module ApiCall
     req = build_request(journey, uri, args[:session_id])
     req.body = body if body
     response = env_api_call(target_env, journey, uri, req)
-    raise('api call failure') unless response.class == Net::HTTPOK
+    if journey == :claimant_response
+      raise('api call failure') unless response.class == Net::HTTPCreated
+    else
+      raise('api call failure') unless response.class == Net::HTTPOK
+    end
     response
   end
 
