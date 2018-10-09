@@ -6,7 +6,7 @@ module JsonClaimElements
         "type": "breakdown",
         "rows": [{
                    "reason": "Bakery Cost",
-                   "amount": 123.45
+                   "amount": 5000.00
                  }, {}, {}, {}]
       }
     }.to_json
