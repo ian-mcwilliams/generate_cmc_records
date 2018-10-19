@@ -46,7 +46,7 @@ module GenerateCmcRecords
     claim_api_call_response = ApiCall.journey_api_call(target_env, :claim, claim_args)
     claim_no = JSON.parse(claim_api_call_response.body)['referenceNumber']
 
-    if target_env == :local
+    if target_env == 'local'
       set_admissions_to_true(claim_no, args[:path_to_integration_tests])
       Logging.output_message("admissions set to TRUE for claim_no '#{claim_no}'\n\n")
     end
