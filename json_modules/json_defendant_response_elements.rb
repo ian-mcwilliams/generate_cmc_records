@@ -1,3 +1,5 @@
+require 'date'
+
 module JsonDefendantResponseElements
 
   def self.amount
@@ -89,11 +91,16 @@ module JsonDefendantResponseElements
   end
 
   def self.repayment_plan(date)
+    current_amount = JSON.parse(amount)['amount']
+    rounded_amount = current_amount.is_a?(Integer) ? current_amount : current_amount.round.to_i + 1
+    end_date = (DateTime.parse(date) + rounded_amount).strftime('%Y-%m-%d')
     {
       "repaymentPlan": {
         "paymentSchedule": "EACH_WEEK",
         "firstPaymentDate": date,
-        "instalmentAmount": 1
+        "instalmentAmount": 1,
+        "paymentLength": "#{rounded_amount} weeks",
+        "completionDate": end_date
       }
     }
   end
@@ -124,7 +131,9 @@ module JsonDefendantResponseElements
                            "type": "CURRENT_ACCOUNT",
                            "joint": false,
                            "balance": 100
-                         }]
+                         }],
+        "carer": false,
+        "disability": "NO",
       }
     }.to_json
   end
