@@ -110,13 +110,13 @@ module JsonDefendantResponseElements
       "statementOfMeans": {
         "reason": "test_ Briefly explain why you can’t pay immediately",
         "incomes": [{
-                      "type": "PENSION",
-                      "amount": 100,
-                      "frequency": "WEEK"
+                      "type": "JOB",
+                      "amount": 1000,
+                      "frequency": "MONTH"
                     }],
         "expenses": [{
                        "type": "RENT",
-                       "amount": 25,
+                       "amount": 100,
                        "frequency": "WEEK"
                      }],
         "residence": {
